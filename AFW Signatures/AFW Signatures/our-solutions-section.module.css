@@ -1,0 +1,84 @@
+/* Ensure this matches ANIMATION_DURATION_MS from JS */
+:root {
+    --animation-duration: 1.5s;
+  }
+  
+  .rotatingContainer {
+    position: relative;
+    min-width: calc((var(--orbit-radius) * 2) + 200px);
+    min-height: calc((var(--orbit-radius) * 2) + 200px);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(25%); /* Move the orbit center to the right */
+  }
+  
+  .orbit {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    transition: transform var(--animation-duration) cubic-bezier(0.645, 0.045, 0.355, 1);
+    transform-origin: center center;
+  }
+  
+  .solutionItemWrapper {
+    position: absolute;
+    /* Centered on the .orbit div's center before transform */
+    top: 50%;
+    left: 50%;
+    /* The item wrapper itself doesn't need a size; its child .solutionImageHolder will have size */
+    transform-origin: center center; /* For its own rotation part of the transform */
+    /* Individual transforms set inline via JS */
+  }
+  
+  .solutionImageHolder {
+    display: flex; /* Helps with centering the Next/Image if it doesn't perfectly fill */
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    transition: transform var(--animation-duration) cubic-bezier(0.645, 0.045, 0.355, 1),
+                opacity var(--animation-duration) cubic-bezier(0.645, 0.045, 0.355, 1),
+                width var(--animation-duration) cubic-bezier(0.645, 0.045, 0.355, 1); /* Animate width change */
+    will-change: transform, opacity, width;
+    position: relative; /* Needed for Next/Image with fill */
+    /* Width and aspect-ratio set inline via JS */
+  }
+  
+  /* Next/Image with fill requires parent to have position:relative and defined dimensions */
+  .solutionImageHolder img {
+    /* object-contain is set on Image component className, ensure it applies */
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  
+  /* Text animation */
+  .textAnimateWrapper {
+    animation: fadeInContent 0.8s ease-in-out forwards;
+  }
+  
+  @keyframes fadeInContent {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @media (max-width: 767px) { /* Mobile: stack layout */
+    #our-solutions .container {
+      grid-template-columns: 1fr; /* Stack columns */
+      gap: 2rem; /* Adjust gap for stacked layout */
+    }
+    .rotatingContainer {
+      min-width: calc((var(--orbit-radius) * 2) + 100px); /* Adjust if orbit radius is smaller on mobile */
+      min-height: calc((var(--orbit-radius) * 2) + 100px);
+      margin-top: 2rem;
+      /* You might want a smaller --orbit-radius for mobile.
+         This would ideally be passed from JS based on viewport,
+         or use CSS media queries to set --orbit-radius. */
+    }
+    .decorativeArcImageContainer { /* If you have a wrapper for the arc */
+        /* Adjust positioning or hide on mobile if it doesn't fit well */
+        left: 50%; /* Center it if stacked */
+    }
+  }
